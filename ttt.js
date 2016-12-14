@@ -18,7 +18,8 @@ let canvas = document.getElementById('ttt'),
         y: -1,
     },
     currentPlayer = X,
-    gameOver = false;
+    gameOver = false,
+    winCells = [];
 
 
 canvas.width = canvas.height = 3 * cellSize;
@@ -60,6 +61,14 @@ function play (cell) {
     if (winCheck != 0) {
         gameOver = true;
         msg.textContent = ((currentPlayer == X)? 'X': 'O') + ' wins!';
+
+        let bit = 1;
+        for (let i = map.length - 1; i >= 0; i--) {
+            if ((bit & winCheck) === bit) {
+                winCells.push(i);
+            }
+            bit <<= 1;
+        }
         return;
     } else if (map.indexOf(BLANK) == -1) {
         gameOver = true;
@@ -91,8 +100,47 @@ function checkWin (player) {
 
 function draw () {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawMouseHighlight();
+    drawWinHighlight();
     drawBoard();
     fillBoard();
+
+    function drawMouseHighlight () {
+        if (gameOver) return;
+
+        let cellNum = getCellByCoords(mouse.x, mouse.y),
+            cellCoords = getCellCoords(cellNum);
+
+        if (map[cellNum] == BLANK) {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.fillRect(cellCoords.x, cellCoords.y, cellSize, cellSize);
+
+            ctx.save();
+
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.translate(cellCoords.x + cellSize / 2, cellCoords.y + cellSize / 2);
+
+            if (currentPlayer == X)
+                drawX();
+            else
+                drawO();
+
+            ctx.restore();
+        } else {
+            ctx.fillStyle = 'rgba(255, 0, 0, 0.3)';
+            ctx.fillRect(cellCoords.x, cellCoords.y, cellSize, cellSize);
+        }
+    }
+
+    function drawWinHighlight () {
+        if (gameOver) {
+            ctx.fillStyle = 'rgba(0, 255, 0, 0.3)';
+            winCells.forEach(function (i) {
+                let cellCoords = getCellCoords(i);
+                ctx.fillRect(cellCoords.x, cellCoords.y, cellSize, cellSize);
+            });
+        }
+    }
 
     function drawBoard () {
         ctx.strokeStyle = 'white';
