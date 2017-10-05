@@ -3,14 +3,16 @@ let canvas = document.getElementById('ttt'),
     msg = document.getElementById('message'),
     cellSize = 100,
     map = [
-        0, 0, 0,
-        0, 0, 0,
-        0, 0, 0,
+        0, 0,
+        0,
+        0, 0,
+        
+        
     ],
     winPatterns = [
-        0b111000000, 0b000111000, 0b000000111, // Rows
-        0b100100100, 0b010010010, 0b001001001, // Columns
-        0b100010001, 0b001010100, // Diagonals
+        0b110000000, 0b001100000, // Rows
+        0b101000000, 0b010100000, // Columns
+        0b100100000, // Diagonals
     ],
     BLANK = 0, X = 1, O = -1,
     mouse = {
@@ -21,7 +23,7 @@ let canvas = document.getElementById('ttt'),
     gameOver = false;
 
 
-canvas.width = canvas.height = 3 * cellSize;
+canvas.width = canvas.height = 2 * cellSize;
 
 canvas.addEventListener('mouseout', function () {
     mouse.x = mouse.y = -1;
@@ -103,20 +105,20 @@ function draw () {
         ctx.lineTo(cellSize, canvas.height);
         ctx.stroke();
 
-        ctx.beginPath();
-        ctx.moveTo(cellSize * 2, 0);
-        ctx.lineTo(cellSize * 2, canvas.height);
-        ctx.stroke();
+       // ctx.beginPath();
+       // ctx.moveTo(cellSize * 2, 0);
+       // ctx.lineTo(cellSize * 2, canvas.height);
+       // ctx.stroke();
 
         ctx.beginPath();
         ctx.moveTo(0, cellSize);
         ctx.lineTo(canvas.width, cellSize);
         ctx.stroke();
 
-        ctx.beginPath();
-        ctx.moveTo(0, cellSize * 2);
-        ctx.lineTo(canvas.width, cellSize * 2);
-        ctx.stroke();
+       // ctx.beginPath();
+     //   ctx.moveTo(0, cellSize * 2);
+        //ctx.lineTo(canvas.width, cellSize * 2);
+        //ctx.stroke();
     }
 
     function fillBoard () {
